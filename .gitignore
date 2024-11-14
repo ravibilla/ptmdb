@@ -2,4 +2,4 @@
 !logs/.gitkeep
 /tmp
 *.swp
- ptmdb.code-workspace
+*.code-workspace
