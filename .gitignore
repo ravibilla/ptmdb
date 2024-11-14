@@ -3,3 +3,5 @@
 /tmp
 *.swp
 *.code-workspace
+/code_jsl/Ensurge-TECH Add-In/Archive/*.jmpaddin
+/code_jsl/Ensurge-TECH Add-In/*.jmpaddin

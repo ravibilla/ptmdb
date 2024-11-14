@@ -1,0 +1,208 @@
+
+// Use 'PickFile()' to get a list of files to open (Windows only)
+file = "";
+file = Pick File(
+	"Select PL Data files", // Prompt
+	"$DOCUMENTS", // Initial folder
+	{"XLSX Files|xlsx", "All Files|*"}, // List of file filters to apply (ignored by OS/X)
+	1, // Initial file filter to apply (index of item in the list above)
+	0, // Save flag - Specify either a 'Save' or 'Open' window. Set a value of 1 or 0 respectively.
+	Empty(), // Default file
+	"Single" // Multiple - If 'Save Flag' = 0, using a value of 1 allows more than one file to be opened (ignored by OS/X)
+);
+
+// Exit script if user cancels file pick dialog
+If( file == "", Stop() );
+
+// Open file 
+dtDipped = Open(file, Worksheets( "Dipped" ));
+dtDipped:Name( "SS Thickness" )  << Data type( Numeric ) << Set Modeling Type( Nominal );
+
+// Delete row data where "Stack Screen Result" column has data other than  
+dtDipped << Select Where(:"Stack Screen Result" == "pass" | :"Stack Screen Result" == "short" | :"Stack Screen Result" == "leaky"| :"Stack Screen Result" == "open") << Invert Row Selection << Delete Rows;
+dtDipped << Clear Select; 
+dtDipped:Name( "key" ) << Set Name( "QuadID" );
+dtDipped << Show Window(0);
+
+// Summarize Stack Screen Results
+dtStackSummary = dtDipped << Summary(
+	Output Table Name( "Stacked By SS Thk." ),
+	Group( :Date, :QuadID, :SS Thickness ),
+	N( :Stack Screen Result ),
+	Subgroup( :Stack Screen Result ),
+	Freq( "None" ),
+	Weight( "None" ),
+	statistics column name format( "column" )
+);
+
+// Rename columns	
+dtStackSummary:Name( "Stack Screen Result, pass" ) << Set Name( "# Pass" );	
+dtStackSummary:Name( "Stack Screen Result, short" ) << Set Name( "# Short" );	
+dtStackSummary:Name( "Stack Screen Result, leaky" ) << Set Name( "# Leaky" );	
+dtStackSummary:Name( "Stack Screen Result, open" ) << Set Name( " #Open" );	
+
+// Re-order columns
+dtStackSummary << Move Selected Columns( {"# Short"}, after( "# Pass" ) );
+dtStackSummary << Move Selected Columns( {"# Leaky"}, after( "# Short" ) );
+dtStackSummary << Move Selected Columns( {"# Open"}, after( "# Leaky" ) );
+
+// Create NEW columns with Formula
+dtStackSummary << New Column( "Pass [%]", Numeric, "Continuous", Formula( (:Name("# Pass")/:Name("N Rows"))*100 ) );
+dtStackSummary:Name( "Pass [%]" ) << Format( "Fixed Dec", 5, 1 );
+dtStackSummary << New Column( "Short [%]", Numeric, "Continuous", Formula( (:Name("# Short")/:Name("N Rows"))*100 ) );
+dtStackSummary:Name( "Short [%]" ) << Format( "Fixed Dec", 5, 1 );
+dtStackSummary << New Column( "Leaky [%]", Numeric, "Continuous", Formula( (:Name("# Leaky")/:Name("N Rows"))*100 ) );
+dtStackSummary:Name( "Leaky [%]" ) << Format( "Fixed Dec", 5, 1 );
+dtStackSummary << New Column( "Open [%]", Numeric, "Continuous", Formula( (:Name("# Open")/:Name("N Rows"))*100 ) );
+dtStackSummary:Name( "Open [%]" ) << Format( "Fixed Dec", 5, 1 );
+dtStackSummary << New Column( "Workweek", Numeric, "Nominal", Formula( Week Of Year(:Date) ) );
+dtStackSummary << Move Selected Columns( {"Workweek"}, after( "Date" ) );
+
+// Calculate Statistics for Reference Lines in Plots
+// 10u: 8-Week Median
+median_10u_8week = 0;
+Try(
+	dtStackSummary << Select Where( :SS Thickness == 10 &:Date >=  As Date(Today())  - in weeks(8) );
+	dtTemp = dtStackSummary << Subset( Output Table Name( "TempSubsetTable" ), Selected Rows( 1 ),  Columns( :Name("Date"), :Name("QuadID"), :Name( "Pass [%]" ) ) );
+	dtStackSummary << Clear Select;
+	median_10u_8week = Col Quantile( dtTemp:Name( "Pass [%]"), 0.5 );
+	Close( dtTemp, NoSave );
+);
+
+// 10u: 2-Week Median
+median_10u_2week =0;
+Try(
+	dtStackSummary << Select Where( :SS Thickness == 10 &:Date >=  As Date(Today()) - in weeks(2) );
+	dtTemp = dtStackSummary << Subset( Output Table Name( "TempSubsetTable" ), Selected Rows( 1 ), Columns( :Name("Date"), :Name("QuadID"), :Name( "Pass [%]" ) ) );
+	dtStackSummary << Clear Select;
+	median_10u_2week = Col Quantile( dtTemp:Name( "Pass [%]"), 0.5 );
+	Close( dtTemp, NoSave );
+);
+
+// 75u: 8-Week Median
+median_75u_8week = 0;
+Try(
+	dtStackSummary << Select Where( :SS Thickness == 75 &:Date >=  col max(:Date) - in weeks(8) );
+	dtStackSummary << Select Where( :SS Thickness == 75 &:Date >=  As Date(Today()) - in weeks(8) );
+	dtTemp = dtStackSummary << Subset( Output Table Name( "TempSubsetTable" ), Selected Rows( 1 ),  Columns( :Name("Date"), :Name("QuadID"), :Name( "Pass [%]" ) ) );
+	dtStackSummary << Clear Select;
+	median_75u_8week = Col Quantile( dtTemp:Name( "Pass [%]"), 0.5 );
+	Close( dtTemp, NoSave );
+);
+
+// 75u: 2-Week Median
+median_75u_2week = 0;
+Try(
+	dtStackSummary << Select Where( :SS Thickness == 75 &:Date >=   As Date(Today()) - in weeks(2) );
+	dtTemp = dtStackSummary << Subset( Output Table Name( "TempSubsetTable" ), Selected Rows( 1 ),  Columns( :Name("Date"), :Name("QuadID"), :Name( "Pass [%]" ) ) );
+	dtStackSummary << Clear Select;
+	median_75u_2week = Col Quantile( dtTemp:Name( "Pass [%]"), 0.5 );
+	Close( dtTemp, NoSave );
+);
+
+Show( median_10u_8week ); //Show median 
+Show( median_10u_2week ); //Show median 
+Show( median_75u_8week ); //Show median 
+Show( median_75u_2week ); //Show median 
+Show(As Date(Today()));
+
+//PLOT: 10u Stacking Yield
+dtStackSummary << New Script(
+	"PLOT: 10u Stacking Yield",
+	Graph Builder(
+		Size( 900, 550 ),
+		Show Control Panel( 0 ),
+		Legend Position( "Bottom" ),
+		Variables(
+			X( :Workweek ),
+			X( :QuadID, Position( 1 ), Order By( :Date, Ascending, Order Statistic( "Mean" ) )),
+			Y( :"Pass [%]"n ),
+			Y( :"Short [%]"n ),
+			Y( :"Leaky [%]"n ),
+			Y( :"Open [%]"n )
+		),
+		Elements( Position( 1, 1 ), Line( X, Y, Legend( 5 ) ), Points( X, Y, Legend( 6 ) ) ),
+		Elements( Position( 1, 2 ), Line( X, Y, Legend( 7 ) ), Points( X, Y, Legend( 8 ) ) ),
+		Elements( Position( 1, 3 ), Line( X, Y, Legend( 9 ) ), Points( X, Y, Legend( 10 ) ) ),
+		Elements( Position( 1, 4 ), Line( X, Y, Legend( 11 ) ), Points( X, Y, Legend( 12 ) ) ),
+		
+		Local Data Filter(
+			Close Outline( 1 ),
+			Add Filter(
+				columns( :SS Thickness, :Date ),
+				Where( :SS Thickness == 10 ),
+				Where( :Date >=  As Date(Today()) - in weeks(8) )
+			)
+		),
+		
+		SendToReport(
+			Dispatch( {}, "Pass [%]", ScaleBox, {Add Ref Line( median_10u_8week, "DashDot", "Red", "8-Wk Median", 1, 1,
+				Label Settings(
+					{Label Position( "Inside Below" ), Opposite Axis( 0 ), Set Font Size( 12 )}
+				)
+			)}
+		),
+		
+			Dispatch( {}, "graph title", TextEditBox, {Set Font Size( 14 ), Set Text( "10u Stacking Yield" )} ),
+			Dispatch( {}, "X title", TextEditBox, {Set Font Size( 12 )} ),
+			Dispatch( {}, "Y title", TextEditBox, {Set Font Size( 12 )} ), 
+			Dispatch( {}, "Y 1 title", TextEditBox, {Set Font Size( 12 )} ),
+			Dispatch( {}, "Y 2 title", TextEditBox, {Set Font Size( 12 )} ),
+			Dispatch( {}, "Y 3 title", TextEditBox, {Set Font Size( 12 )} )
+		)
+	)
+);
+
+//PLOT: 75u Stacking Yield
+dtStackSummary << New Script(
+	"PLOT: 75u Stacking Yield",
+	Graph Builder(
+		Size( 900, 550 ),
+		Show Control Panel( 0 ),
+		Legend Position( "Bottom" ),
+		Variables(
+			X( :Workweek ),
+			X( :QuadID, Position( 1 ), Order By( :Date, Ascending, Order Statistic( "Mean" ) )),
+			Y( :"Pass [%]"n ),
+			Y( :"Short [%]"n ),
+			Y( :"Leaky [%]"n ),
+			Y( :"Open [%]"n )
+		),
+		Elements( Position( 1, 1 ), Line( X, Y, Legend( 5 ) ), Points( X, Y, Legend( 6 ) ) ),
+		Elements( Position( 1, 2 ), Line( X, Y, Legend( 7 ) ), Points( X, Y, Legend( 8 ) ) ),
+		Elements( Position( 1, 3 ), Line( X, Y, Legend( 9 ) ), Points( X, Y, Legend( 10 ) ) ),
+		Elements( Position( 1, 4 ), Line( X, Y, Legend( 11 ) ), Points( X, Y, Legend( 12 ) ) ),
+		
+		Local Data Filter(
+			Close Outline( 1 ),
+			Add Filter(
+				columns( :SS Thickness, :Date ),
+				Where( :SS Thickness == 75 ),
+				Where( :Date >=  As Date(Today()) - in weeks(8) )
+			)
+		),
+		
+		SendToReport(
+				Dispatch( {}, "Pass [%]", ScaleBox, {Add Ref Line( median_75u_8week, "DashDot", "Red", "8-Wk Median", 1, 1,
+					Label Settings(
+					{Label Position( "Inside Below" ), Opposite Axis( 0 ), Set Font Size( 12 )}
+				)
+			)}
+		),
+
+			Dispatch( {}, "graph title", TextEditBox, {Set Font Size( 14 ), Set Text( "75u Stacking Yield" )} ),
+			Dispatch( {}, "X title", TextEditBox, {Set Font Size( 12 )} ),
+			Dispatch( {}, "Y title", TextEditBox, {Set Font Size( 12 )} ), 
+			Dispatch( {}, "Y 1 title", TextEditBox, {Set Font Size( 12 )} ),
+			Dispatch( {}, "Y 2 title", TextEditBox, {Set Font Size( 12 )} ),
+			Dispatch( {}, "Y 3 title", TextEditBox, {Set Font Size( 12 )} )
+		)
+	)
+);
+
+// Evaluate data table scripts
+Eval( dtStackSummary << Get Table Property( "PLOT: 10u Stacking Yield" ) );
+Eval( dtStackSummary << Get Table Property( "PLOT: 75u Stacking Yield" ) );
+
+// Close all 
+dtStackSummary << On Close( Close All( Data Tables, Reports, NoSave ) );

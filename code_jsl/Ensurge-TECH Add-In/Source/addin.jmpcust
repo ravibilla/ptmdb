@@ -1,0 +1,20 @@
+<!-- JMP Add-In Builder created --><jm:menu_and_toolbar_customizations xmlns:jm="http://www.jmp.com/ns/menu" version="3">
+  <jm:insert_in_main_menu>
+    <jm:insert_in_menu>
+      <jm:name>Add-Ins</jm:name>
+      <jm:insert_after>
+        <jm:name>Help</jm:name>
+        <jm:menu>
+          <jm:name>ENSURGE-TECH</jm:name>
+          <jm:caption>Ensurge-TECH</jm:caption>
+          <jm:command>
+            <jm:name>STACKING YIELD</jm:name>
+            <jm:caption>Stacking Yield</jm:caption>
+            <jm:action type="path">$ADDIN_HOME(com.ensurge.tech)\stacking_yield.jsl</jm:action>
+            <jm:icon type="none"></jm:icon>
+          </jm:command>
+        </jm:menu>
+      </jm:insert_after>
+    </jm:insert_in_menu>
+  </jm:insert_in_main_menu>
+</jm:menu_and_toolbar_customizations>
