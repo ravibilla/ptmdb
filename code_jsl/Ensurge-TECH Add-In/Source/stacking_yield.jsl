@@ -3,7 +3,8 @@
 file = "";
 file = Pick File(
 	"Select PL Data files", // Prompt
-	"$DOCUMENTS", // Initial folder
+	//"$DOCUMENTS", // Initial folder
+	"\\fileserver\COMMON\Lab\NEWARE\EIS-Screening", // Initial folder
 	{"XLSX Files|xlsx", "All Files|*"}, // List of file filters to apply (ignored by OS/X)
 	1, // Initial file filter to apply (index of item in the list above)
 	0, // Save flag - Specify either a 'Save' or 'Open' window. Set a value of 1 or 0 respectively.

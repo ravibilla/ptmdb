@@ -1,0 +1,11 @@
+Names Default To Here( 1 );
+
+::FormatBEEISDataColumnsFn = Function( {dtBE}, 
+
+	// Fix column formats
+	Try(dtBE:Name("Test_Date") << Data Type(Numeric) <<  Modeling Type(Continuous) << Format("yyyy-mm-dd"));
+	Try(dtBE:Name("Test_Time") << Data Type(Numeric) <<  Modeling Type(Continuous) << Format("h:m:s"));
+
+	// Return dt
+	dtBE;
+);

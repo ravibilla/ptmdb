@@ -1,0 +1,15 @@
+Names Default To Here( 1 );
+
+::FormatFEEISDataColumnsFn = Function( {dtFE}, 
+
+	// Fix column formats
+	Try(dtFE:Name("Test_Date") << Data Type(Numeric) <<  Modeling Type(Continuous) << Format("yyyy-mm-dd"));
+	Try(dtFE:Name("EIS_Slope") << Data Type(Numeric) <<  Modeling Type(Continuous) << Format(Best,12));
+	Try(dtFE:Name("Freq_1Hz_Hz") << Data Type(Numeric) <<  Modeling Type(Continuous) << Format(Best,12));
+	Try(dtFE:Name("Freq_1KHz_Hz") << Data Type(Numeric) <<  Modeling Type(Continuous) << Format(Best,12));
+	Try(dtFE:Name("Phase_1Hz_Deg") << Data Type(Numeric) <<  Modeling Type(Continuous) << Format(Best,12));
+	Try(dtFE:Name("Phase_1KHz_Deg") << Data Type(Numeric) <<  Modeling Type(Continuous) << Format(Best,12));
+
+	// Return dt
+	dtFE;
+);

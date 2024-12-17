@@ -1,0 +1,49 @@
+//set values
+DepotPath = "R:\Technology\Software\JMP Addins\";
+MetaDataFile = "File Metadata.jmp";
+
+//get the name of the add-in and revision date
+ns = ::GetAddinNamespaceFn();
+AddinName = ns:AddinArray["name"];
+AddinFileName = ns:AddinArray["name"] || ".jmpaddin";
+RevisionDate = ns:AddinArray["RevisionDateNumber"];
+
+//function to request update of the add-in
+RequestUpdate = Function( {date},
+	Answer = New Window( "Update Available!",
+		modal,
+		V List Box(
+			Text Box(
+				"An updated version of " || AddinName || " addin was published on "
+				 || Format( date, "ddMonyyyy" ) ||
+				". Click 'OK' to install the updated version, or 'Cancel' to continue using the present version."
+			),
+			H List Box( Button Box( "OK" ), Button Box( "Cancel" ) )
+		)
+	)["Button"];
+	Return( Answer );
+);
+
+
+//get the most recent revision date 
+Try(
+	dtm = Open( DepotPath || MetaDataFile, invisible );
+	r = ((dtm << selectwhere(
+		:File == AddinFileName & :Name( "Date Number" ) == Col Max( :Name( "Date Number" ) )
+	)) << get selected rows)[1];
+	MostRecentDate = Column( dtm, "Date Number" )[r];
+	Close( dtm, nosave );
+	If( MostRecentDate > RevisionDate,
+		If( RequestUpdate( MostRecentDate ) == 1,
+			Open( DepotPath || AddinFileName );
+			::Log Usage( "Check for Updates" );
+			New Window( "Re-Run",
+				Show Menu( 0 ),
+				show toolbars( 0 ),
+				<<modal,
+				Text Box( "Updated Add-in installed." )
+			);
+			Stop();
+		)
+	);
+);

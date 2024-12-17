@@ -1,0 +1,76 @@
+﻿Names Default To Here( 1 );
+
+ns = ::GetAddinNamespaceFn();
+Addin_Name = ns:AddinArray["name"];
+//::LogUsageFn( "EIS_Quad_Summary_By_Lot" );
+
+// Include files
+Include( "$ADDIN_HOME(com.ensurge.tech)\Functions\FormatFEEISDataColumnsFn.jsl" );
+Include( "$ADDIN_HOME(com.ensurge.tech)\Functions\FormatBEEISDataColumnsFn.jsl" );
+Include( "$ADDIN_HOME(com.ensurge.tech)\Functions\RenameEISDataColumnsFn.jsl" );
+
+// Create a modal dialog
+New Window( "EIS Summary data by Lot",
+	<<Modal,
+	V List Box(
+		Text Box( "Query EIS Summary data by Lot", <<set font size( 11 ), <<set font style( "bold" ) ),
+		Text Box( "" ),
+		H List Box(
+			Panel Box( "Enter Lot ID:",
+				V List Box(
+					Spacer Box(),
+					H List Box(
+						lot_id = Text Edit Box( "", Set Width( 80 ) )
+					)
+				)
+			)
+		),
+		H List Box(
+			Spacer Box( size( 220, 0 ) ),
+			Button Box( "OK",
+				
+				LotID = lot_id << Gettext;
+
+				//Exit script if user doesn't enter lot id
+				If( LotID == "",
+					Try( NaN, Throw( New Window( "Input Error", <<Modal, tb1 = Text Box( "Please enter a lot id." ) ) ) )
+				);
+
+				// Query Frontend EIS Summary data
+				queryString = "CALL spGetFrontendEISDataSummaryByLot('" || LotID || "');";
+				dbCon = Create Database Connection( ::GetDSNCredentialsFn("feeis") );
+				dtFE = Execute SQL( dbCon, queryString, "FE-EIS Summary by Lot" );
+				dtFE << Show Window(0);
+				Close Database Connection( dbCon );
+	
+				// Query Backend EIS Summary data
+				queryString = "EXECUTE spGetBackendEISDataSummaryByLot '" || LotID || "';";
+				dbCon = Create Database Connection( ::GetDSNCredentialsFn("beeis") );
+				dtBE = Execute SQL( dbCon, queryString, "BE-EIS Summary by Lot" );
+				dtBE << Show Window(0);
+				Close Database Connection( dbCon );
+				
+				// Fix column formats
+				dtFE = ::FormatFEEISDataColumnsFn( dtFE );
+				dtBE = ::FormatBEEISDataColumnsFn( dtBE );
+
+				// Concatenate FE & BE data
+				dtConcat = Concatenate( dtFE, dtBE);
+				dtConcat << Set Name ("FE & BE EIS Summary by Lot");
+				Close( dtFE, NoSave );
+				Close( dtBE, NoSave );
+				
+				// Rename columns
+				dtConcat = ::RenameEISDataColumnsFn( dtConcat );
+				
+				// Set window size
+				dtConcat << Set Window Size(1400, 850);
+				
+				// Close all 
+				dtConcat << On Close( Close All( Data Tables, Reports, NoSave ) );
+				
+			)
+		)
+	)
+);
+

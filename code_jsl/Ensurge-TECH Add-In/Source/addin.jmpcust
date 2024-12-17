@@ -7,10 +7,59 @@
         <jm:menu>
           <jm:name>ENSURGE-TECH</jm:name>
           <jm:caption>Ensurge-TECH</jm:caption>
+          <jm:menu>
+            <jm:name>EZ-MES</jm:name>
+            <jm:caption>EZ-MES</jm:caption>
+            <jm:command>
+              <jm:name>EQUIPMENT STATUS</jm:name>
+              <jm:caption>Equipment Status</jm:caption>
+              <jm:action type="path">$ADDIN_HOME(com.ensurge.tech)\ComingSoon.jsl</jm:action>
+              <jm:icon type="none"></jm:icon>
+            </jm:command>
+          </jm:menu>
+          <jm:menu>
+            <jm:name>E-TEST</jm:name>
+            <jm:caption>E-Test</jm:caption>
+            <jm:command>
+              <jm:name>QUAD EIS RAW BY DATE</jm:name>
+              <jm:caption>Quad EIS RAW by Date</jm:caption>
+              <jm:action type="path">$ADDIN_HOME(com.ensurge.tech)\EIS_Quad_RAW_By_Date.jsl</jm:action>
+              <jm:icon type="none"></jm:icon>
+            </jm:command>
+            <jm:command>
+              <jm:name>QUAD EIS RAW BY LOT</jm:name>
+              <jm:caption>Quad EIS RAW by Lot</jm:caption>
+              <jm:action type="path">$ADDIN_HOME(com.ensurge.tech)\EIS_Quad_RAW_By_Lot.jsl</jm:action>
+              <jm:icon type="none"></jm:icon>
+            </jm:command>
+            <jm:command>
+              <jm:name>QUAD EIS SUMMARY BY DATE</jm:name>
+              <jm:caption>Quad EIS Summary by Date</jm:caption>
+              <jm:action type="path">$ADDIN_HOME(com.ensurge.tech)\EIS_Quad_Summary_By_Date.jsl</jm:action>
+              <jm:icon type="none"></jm:icon>
+            </jm:command>
+            <jm:command>
+              <jm:name>QUAD EIS SUMMARY BY LOT</jm:name>
+              <jm:caption>Quad EIS Summary by Lot</jm:caption>
+              <jm:action type="path">$ADDIN_HOME(com.ensurge.tech)\EIS_Quad_Summary_By_Lot.jsl</jm:action>
+              <jm:icon type="none"></jm:icon>
+            </jm:command>
+            <jm:command>
+              <jm:name>STACK EIS SUMMARY</jm:name>
+              <jm:caption>Stack EIS Summary</jm:caption>
+              <jm:action type="path">$ADDIN_HOME(com.ensurge.tech)\EIS_Stack_Screening.jsl</jm:action>
+              <jm:icon type="none"></jm:icon>
+            </jm:command>
+          </jm:menu>
+          <jm:menu>
+            <jm:name>MISC.</jm:name>
+            <jm:caption>Misc.</jm:caption>
+          </jm:menu>
+          <jm:separator />
           <jm:command>
-            <jm:name>STACKING YIELD</jm:name>
-            <jm:caption>Stacking Yield</jm:caption>
-            <jm:action type="path">$ADDIN_HOME(com.ensurge.tech)\stacking_yield.jsl</jm:action>
+            <jm:name>ABOUT</jm:name>
+            <jm:caption>About</jm:caption>
+            <jm:action type="path">$ADDIN_HOME(com.ensurge.tech)\About.jsl</jm:action>
             <jm:icon type="none"></jm:icon>
           </jm:command>
         </jm:menu>

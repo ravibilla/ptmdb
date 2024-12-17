@@ -1,0 +1,31 @@
+
+::LogUsageFn = Function( {Script_name},
+	Clear Log();
+	//get a unique ID for the user
+	UserName = Get Environment Variable( "USERNAME" );
+	
+	//get the name of the add-in
+	ns = ::GetAddinNamespaceFn();
+	AddinName = ns:AddinArray["name"];
+	AddinVersion = "v" || ns:AddinArray["version"];
+	
+	//get date-time stamp
+	DateTimeStamp = MDYHMS( Today() );
+	
+	//create log file unique to user
+	If( Host is( Windows ),
+		system = "windows",
+		system = "posix"
+	);
+	DataLogFile = Convert File Path( "$TEMP", system ) || UserName || "DataLog.txt";
+
+	//create text to be added to log file
+	LogEntry = AddinName || ", " || AddinVersion || ", " || Script_Name || ", " || UserName || ", " || DateTimeStamp || "\!N";
+
+	//add text to log file if log file exists, otherwise create a new log file with text
+	If( File Exists( DataLogFile ),
+		Save Text File( DataLogFile, LogEntry, Mode( "append" ) ),
+		Save Text File( DataLogFile, LogEntry, Mode( "replace" ) )
+	);
+ 
+);

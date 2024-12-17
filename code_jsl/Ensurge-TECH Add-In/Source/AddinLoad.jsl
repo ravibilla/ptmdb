@@ -1,0 +1,8 @@
+Include( "CreateAddinNamespace.jsl" );
+Include( "GetAddinNamespaceFn.jsl" );
+Include( "GetDSNCredentialsFn.jsl" );
+//Include( "GetNetworkDataPathFn.jsl" );
+//Include( "LogUsageFn.jsl" );
+//Include( "CheckForUpdatesOnLoad.jsl" );
+
+

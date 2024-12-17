@@ -1,0 +1,38 @@
+Names Default To Here( 1 );
+
+::RenameEISDataColumnsFn = Function( {dtConcat}, 
+
+	// Rename columns
+	Try(dtConcat:Name( "File_Name" ) << Set Name( "File Name" ));
+	Try(dtConcat:Name( "Test_Date" ) << Set Name( "Test Date" ));
+	Try(dtConcat:Name( "Test_Time" ) << Set Name( "Test Time" ));
+	Try(dtConcat:Name( "Lot_Id" ) << Set Name( "Lot ID" ));
+	Try(dtConcat:Name( "Quad_Id" ) << Set Name( "Quad ID" ));
+	Try(dtConcat:Name( "X_Coord" ) << Set Name( "X-Coord" ));
+	Try(dtConcat:Name( "Y_Coord" ) << Set Name( "Y-Coord" ));
+	Try(dtConcat:Name( "OCV_V" ) << Set Name( "OCV [V]" ));
+	Try(dtConcat:Name( "Conductivity_uS_cm" ) << Set Name( "Conductivity [uS/cm]" ));
+	Try(dtConcat:Name( "Freq_Hz" ) << Set Name( "Freq [Hz]" ));
+	Try(dtConcat:Name( "Re_Z_Ohm" ) << Set Name( "Re(Z) [Ω]" ));
+	Try(dtConcat:Name( "Im_Z_Ohm" ) << Set Name( "-Im(Z) [Ω]" ));
+	Try(dtConcat:Name( "Phase_Deg" ) << Set Name( "Phase [Deg]" ));
+	Try(dtConcat:Name( "EIS_Slope" ) << Set Name( "EIS Slope" ));
+	Try(dtConcat:Name( "Re_Z_Ohm_cm2" ) << Set Name( "Re(Z) [Ω·cm2]" ));
+	Try(dtConcat:Name( "Re_Z_1Hz_Ohm_cm2" ) << Set Name( "Re(Z) 1Hz [Ω·cm2]" ));
+	Try(dtConcat:Name( "Re_Z_1KHz_Ohm_cm2" ) << Set Name( "Re(Z) 1KHz [Ω·cm2]" ));
+	Try(dtConcat:Name( "Re_Z_100KHz_Ohm_cm2" ) << Set Name( "Re(Z) 100KHz [Ω·cm2]" ));
+	Try(dtConcat:Name( "Im_Z_Ohm_cm2" ) << Set Name( "-Im(Z) [Ω·cm2]" ));
+	Try(dtConcat:Name( "Im_Z_1Hz_Ohm_cm2" ) << Set Name( "-Im(Z) 1Hz [Ω·cm2]" ));
+	Try(dtConcat:Name( "Im_Z_1KHz_Ohm_cm2" ) << Set Name( "-Im(Z) 1KHz [Ω·cm2]" ));
+	Try(dtConcat:Name( "Im_Z_100KHz_Ohm_cm2" ) << Set Name( "-Im(Z) 100Hz [Ω·cm2]" ));
+	Try(dtConcat:Name( "Freq_1Hz_Hz" ) << Set Name( "Freq 1Hz [Hz]" ));
+	Try(dtConcat:Name( "Freq_1KHz_Hz" ) << Set Name( "Freq 1KHz [Hz]" ));
+	Try(dtConcat:Name( "Phase_1Hz_Deg" ) << Set Name( "Phase 1Hz [Deg]" ));
+	Try(dtConcat:Name( "Phase_1KHz_Deg" ) << Set Name( "Phase 1KHz [Deg]" ));
+	Try(dtConcat:Name( "Phase_100KHz_Deg" ) << Set Name( "Phase 100KHz [Deg]" ));
+	Try(dtConcat:Name( "Phase_Minimum_Deg" ) << Set Name( "Phase Min [Deg]" ));
+	Try(dtConcat:Name( "Re_Z_At_Phase_Min_Ohm_cm2" ) << Set Name( "Re(Z) at Phase Min [Ω·cm2]" ));
+
+	// Return dt
+	dtConcat;
+);

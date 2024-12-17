@@ -1,8 +1,3 @@
-EmailWindow = Expr(
-	MailToString = "mailto:" || AddinDeveloperEmail || "?subject=" || AddinName || "%20add-in%20question";
-	Web( MailToString );
-);
-
 Names Default To Here( 1 );
 ns = ::GetAddinNamespaceFn();
 
@@ -18,22 +13,15 @@ AddinDeveloperName = customMetadata_aa["author"];
 AddinDeveloperEmail = customMetadata_aa["email"];
 //::LogUsageFn( "About" );
 
-New Window( "About...",
+New Window( "Coming soon...",
 	<<Modal,
 	Show Menu( 0 ),
 	Show Toolbars( 0 ),
 	Border Box( Top( 5 ), Bottom( 10 ), Left( 10 ), Right( 10 ),
 		V List Box(
 			H List Box(
-				tb1 = Text Box( "This " || AddinName || " add-in v" ||  AddinVersion || " was published on " || AddinRevisionDate ),
+				tb1 = Text Box( "The developer of this " || AddinName || " add-in is hard at work to enable this feature. Stay tuned!"),
 				tb1 << set font size( 12 ) << set font style( "bold" ),
-			), 
-			
-			Spacer Box( size( 1, 5 ) ), 
-			
-			H List Box( 
-				tb2 = Text Box( "by " || AddinDeveloperName ), 
-				tb2 << set font size( 12 ) << set font style( "bold" ), 	
 			), 
 			
 			Spacer Box( size( 1, 5 ) ), 

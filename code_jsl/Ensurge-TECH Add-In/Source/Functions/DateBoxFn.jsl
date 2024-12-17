@@ -1,0 +1,32 @@
+Names Default To Here( 1 );
+
+//makes a calendar come up on a numeditbox that is a little more robust
+
+//Note, this only works on JMP 11+
+::DateBoxFn = Function( {timething = Today()},
+	{newbox},
+	newbox = Eval(
+		Substitute(
+				Name Expr(
+					Number Edit Box(
+						timething, //Eval(Sub()) because of JMP quirk
+
+						10, //just need this because JMP doesn't default a width
+
+						<<Set function(
+							Function( {self},
+								{}, 
+
+								If( Is Missing( self << get ),
+									self << Set( Eval( DUMMY ) ) //sets the date to the timething argument
+								)
+							)
+						),
+						<<Set Format( Format( "m/d/y", 10 ) ); //makes datetime format for the box (gives calendar)
+					)
+				),
+			Expr( DUMMY ), timething
+		)
+	);
+	newbox;
+);

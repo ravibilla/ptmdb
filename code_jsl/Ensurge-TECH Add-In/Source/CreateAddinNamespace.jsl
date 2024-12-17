@@ -1,0 +1,29 @@
+Names Default To Here( 1 );
+
+// Load addin.def file as a character string
+AddinDefString = Load Text File( "addin.def" );
+Substitute Into( AddinDefString, "\!"", "" );
+
+//Parse string into a list of strings, one for each row in addin.def
+StringList = Words( AddinDefString, "\!n" );
+
+//Parse this list into to separate lists and then combine them into 
+//an associative array
+ListLength = Length( StringList );
+KeyList = List();
+ValueList = List();
+For( i = 1, i <= ListLength, i++,
+	KeyList[i] = Trim Whitespace( Word( 1, StringList[i], "=" ) );
+	ValueList[i] = Trim Whitespace( Word( 2, StringList[i], "=" ) );
+);
+	
+AddinArray = Associative Array( KeyList, ValueList );
+
+//Add revision date value to the associative array
+//AddinArray["RevisionDateNumber"] = Num( AddinArray["RevisionDate"], Informat( "ddMonyyyy" ) );
+
+//create new namespace based on add-in name
+ns = New Namespace( AddinArray["name"] );
+
+//load information from addin.def into associative array within the new namespace
+ns:AddinArray = AddinArray;

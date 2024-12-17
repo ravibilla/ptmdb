@@ -2,3 +2,4 @@ id=com.ensurge.tech
 name=Ensurge-TECH
 supportJmpSE=0
 addinVersion=1
+minJmpVersion=13
