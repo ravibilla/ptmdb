@@ -53,13 +53,13 @@ New Window( "EIS Summary data by Lot",
 				// Fix column formats
 				dtFE = ::FormatFEEISDataColumnsFn( dtFE );
 				dtBE = ::FormatBEEISDataColumnsFn( dtBE );
-
+				
 				// Concatenate FE & BE data
-				dtConcat = Concatenate( dtFE, dtBE);
-				dtConcat << Set Name ("FE & BE EIS Summary by Lot");
+				dtConcat = New Table("FE & BE EIS Summary by Lot");
+				dtConcat << Concatenate( dtFE, dtBE, "Append to first table");
 				Close( dtFE, NoSave );
 				Close( dtBE, NoSave );
-				
+
 				// Rename columns
 				dtConcat = ::RenameEISDataColumnsFn( dtConcat );
 				

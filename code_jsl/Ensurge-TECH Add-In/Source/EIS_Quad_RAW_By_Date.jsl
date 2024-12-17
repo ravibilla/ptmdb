@@ -56,8 +56,8 @@ New Window( "EIS RAW Data by Date",
 				dtBE = ::FormatBEEISDataColumnsFn( dtBE );
 
 				// Concatenate FE & BE data
-				dtConcat = Concatenate( dtFE, dtBE);
-				dtConcat << Set Name ("FE & BE EIS RAW by Date");
+				dtConcat = New Table("FE & BE EIS RAW by Date");
+				dtConcat << Concatenate( dtFE, dtBE, "Append to first table");
 				Close( dtFE, NoSave );
 				Close( dtBE, NoSave );
 				
