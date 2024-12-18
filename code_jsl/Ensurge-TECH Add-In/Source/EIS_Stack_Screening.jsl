@@ -310,5 +310,5 @@ dtStackSummary << New Script(
 Eval( dtStackSummary << Get Table Property( "PLOT: 10u Stacking Yield" ) );
 Eval( dtStackSummary << Get Table Property( "PLOT: 75u Stacking Yield" ) );
 
-// Close all 
-dtStackSummary << On Close( Close All( Data Tables, Reports, NoSave ) );
+// Close all child tables and reports without saving
+dtStackSummary<< onclose( Function( {a}, Close( (a << Child) << GetDataTable, NoSave ); 1; ) );

@@ -4,6 +4,7 @@ Names Default To Here( 1 );
 
 	// Fix column formats
 	Try(dtFE:Name("Test_Date") << Data Type(Numeric) <<  Modeling Type(Continuous) << Format("yyyy-mm-dd"));
+	Try(dtFE:Name("Bin") << Data Type(Numeric) <<  Modeling Type(Nominal) << Format(Best,12));
 	Try(dtFE:Name("EIS_Slope") << Data Type(Numeric) <<  Modeling Type(Continuous) << Format(Best,12));
 	Try(dtFE:Name("Freq_1Hz_Hz") << Data Type(Numeric) <<  Modeling Type(Continuous) << Format(Best,12));
 	Try(dtFE:Name("Freq_1KHz_Hz") << Data Type(Numeric) <<  Modeling Type(Continuous) << Format(Best,12));

@@ -5,6 +5,7 @@ Names Default To Here( 1 );
 	// Fix column formats
 	Try(dtBE:Name("Test_Date") << Data Type(Numeric) <<  Modeling Type(Continuous) << Format("yyyy-mm-dd"));
 	Try(dtBE:Name("Test_Time") << Data Type(Numeric) <<  Modeling Type(Continuous) << Format("h:m:s"));
+	Try(dtBE:Name("Bin") << Data Type(Numeric) <<  Modeling Type(Nominal) << Format(Best,12));
 
 	// Return dt
 	dtBE;

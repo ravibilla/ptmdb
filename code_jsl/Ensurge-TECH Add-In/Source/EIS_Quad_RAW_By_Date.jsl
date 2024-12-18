@@ -67,8 +67,8 @@ New Window( "EIS RAW Data by Date",
 				// Set window size
 				dtConcat << Set Window Size(1400, 850);
 				
-				// Close all 
-				dtConcat << On Close( Close All( Data Tables, Reports, NoSave ) );
+				// Close all child tables and reports without saving
+				dtConcat << onclose( Function( {a}, Close( (a << Child) << GetDataTable, NoSave ); 1; ) );
 				
 			)
 		)
