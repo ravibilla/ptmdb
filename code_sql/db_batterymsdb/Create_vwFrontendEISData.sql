@@ -25,7 +25,7 @@ AS
         T7.conductivity AS Conductivity_uS_cm,
         T6.freq AS Freq_Hz, 
         T6.zreal AS Re_Z_Ohm, 
-        T6.zimag AS Im_Z_Ohm, 
+        T6.zimag * -1.0 AS Im_Z_Ohm, 
         T6.phase AS Phase_Deg, 
         NULL AS EIS_Slope,
         NULL AS Freq_1Hz_Hz, 
