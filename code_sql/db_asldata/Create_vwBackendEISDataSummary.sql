@@ -26,6 +26,8 @@ AS
         T7.ocv AS OCV_V, 
         T7.conductivity AS Conductivity_uS_cm, 
 		T6.EIslope AS EIS_Slope,
+        T7.Freq_1hz AS Freq_1Hz_Hz, 
+        T7.Freq_1khz AS Freq_1KHz_Hz,
         T7.Zreal_1hz * 0.2365 AS Re_Z_1Hz_Ohm_cm2, 
         T7.Zreal_1khz * 0.2365 AS Re_Z_1KHz_Ohm_cm2, 
         T6.Zreal * 0.2365 AS Re_Z_100KHz_Ohm_cm2, 
@@ -35,7 +37,9 @@ AS
         T7.phase_1hz AS Phase_1Hz_Deg, 
         T7.phase_1khz AS Phase_1KHz_Deg, 
         T6.phase AS Phase_100KHz_Deg, 
-        T7.phase_min AS Phase_Minimum_Deg
+        T7.phase_min AS Phase_Minimum_Deg,
+        T7.Freq_min AS Freq_At_Phase_Min_Hz,
+        T7.Zreal_min AS Re_Z_At_Phase_Min_Ohm_cm2
     FROM [ASLDATA].[dbo].[Roll] AS T1
         LEFT OUTER JOIN [ASLDATA].[dbo].[Sheet] AS T2
             ON (T2.RollKey = T1.ID)

@@ -27,17 +27,19 @@ AS
         T6.zimag AS Im_Z_Ohm, 
         T6.phase AS Phase_Deg, 
         NULL AS EIS_Slope,
+        NULL AS Freq_1Hz_Hz, 
+        NULL AS Freq_1KHz_Hz,
         T6.zreal * 0.2365 AS Re_Z_Ohm_cm2, 
         T7.zreal_1hz * 0.2365 AS Re_Z_1Hz_Ohm_cm2, 
         T7.zreal_1khz * 0.2365 AS Re_Z_1KHz_Ohm_cm2, 
-        T6.zimag * 0.2365 AS Im_Z_Ohm_cm2,
-        T7.zimag_1hz * 0.2365 AS Im_Z_1Hz_Ohm_cm2, 
-        T7.zimag_1khz * 0.2365 AS Im_Z_1KHz_Ohm_cm2,
-        NULL AS Freq_1Hz_Hz, 
-        NULL AS Freq_1KHz_Hz,
+        T6.zimag * -0.2365 AS Im_Z_Ohm_cm2,
+        T7.zimag_1hz * -0.2365 AS Im_Z_1Hz_Ohm_cm2, 
+        T7.zimag_1khz * -0.2365 AS Im_Z_1KHz_Ohm_cm2,
         T7.zphase_1hz AS Phase_1Hz_Deg, 
         ATAN(T7.zimag_1khz / T7.zreal_1khz) * (180 / PI()) AS  Phase_1KHz_Deg, 
-        T7.phase_min AS Phase_Minimum_Deg
+        T7.phase_min AS Phase_Minimum_Deg,
+        T7.freq_min AS Freq_At_Phase_Min_Hz,
+        T7.zreal_min * 0.2365 AS Re_Z_At_Phase_Min_Ohm_cm2
     FROM batterymsdb.Roll AS T1
         LEFT OUTER JOIN sheet T2 
             ON (T2.roll_key = T1.key)  
