@@ -35,6 +35,10 @@ Names Default To Here( 1 );
 	Try(dtConcat:Name( "Freq_At_Phase_Min_Hz" ) << Set Name( "Freq at Phase Min [Hz]" ));
 	Try(dtConcat:Name( "Re_Z_At_Phase_Min_Ohm_cm2" ) << Set Name( "Re(Z) at Phase Min [Ω·cm2]" ));
 
+	// Format columns
+	Try(dtConcat:Name("Stage") << Set Property("Value Ordering", {"FE", "BE"}));
+	Try(dtConcat:Name("Quad") << Set Property("Value Ordering", {"TL", "TR", "BL", "BR"}));
+
 	// Return dt
 	dtConcat;
 );

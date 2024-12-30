@@ -22,7 +22,7 @@ AS
 		CONCAT(T1.RollID, '-', T2.SheetID, '-', T3.QuadID) AS Quad_Id,
         FORMAT(T4.Xcoord, '00') AS X_Coord, 
 		FORMAT(T4.Ycoord, '00') AS Y_Coord, 
-        CONCAT(FORMAT(T4.Xcoord, '00'), FORMAT(T4.Ycoord, '00')) AS Die_Id,
+        CONCAT('X', FORMAT(T4.Xcoord, '00'), 'Y', FORMAT(T4.Ycoord, '00')) AS Die_Id,
 		CAST(T4.Binnum AS Int) AS Bin,
         T7.ocv AS OCV_V, 
         T7.conductivity AS Conductivity_uS_cm, 

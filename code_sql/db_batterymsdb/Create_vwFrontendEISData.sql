@@ -19,7 +19,7 @@ AS
         CONCAT(T1.roll_id, '-', T2.sheet_id, '-', T3.quad_id) AS Quad_Id,
         LPAD(T4.col - 1, 2, '0') AS X_Coord,
         LPAD(T4.row - 1, 2, '0') AS Y_Coord,
-        CONCAT( LPAD(T4.col - 1, 2, '0'), LPAD(T4.row - 1, 2, '0')) AS Die_Id,
+        CONCAT( 'X', LPAD(T4.col - 1, 2, '0'), 'Y', LPAD(T4.row - 1, 2, '0')) AS Die_Id,
         CAST(T4.bin_category AS Int) AS Bin,
         T7.ocv AS OCV_V,
         T7.conductivity AS Conductivity_uS_cm,
