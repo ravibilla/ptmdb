@@ -8,6 +8,7 @@ Addin_Name = ns:AddinArray["name"];
 Include( "$ADDIN_HOME(com.ensurge.tech)\Functions\FormatFEEISDataColumnsFn.jsl" );
 Include( "$ADDIN_HOME(com.ensurge.tech)\Functions\FormatBEEISDataColumnsFn.jsl" );
 Include( "$ADDIN_HOME(com.ensurge.tech)\Functions\RenameEISDataColumnsFn.jsl" );
+Include( "$ADDIN_HOME(com.ensurge.tech)\Functions\FormatEISDataColumnsFn.jsl" );
 
 // Create a modal dialog
 New Window( "EIS RAW Data by Lot",
@@ -62,6 +63,9 @@ New Window( "EIS RAW Data by Lot",
 
 				// Rename columns
 				dtConcat = ::RenameEISDataColumnsFn( dtConcat );
+
+				// Format columns
+				dtConcat = ::FormatEISDataColumnsFn( dtConcat );
 				
 				// Set window size
 				dtConcat << Set Window Size(1400, 850);

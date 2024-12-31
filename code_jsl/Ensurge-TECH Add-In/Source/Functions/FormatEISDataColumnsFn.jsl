@@ -1,0 +1,11 @@
+Names Default To Here( 1 );
+
+::FormatEISDataColumnsFn = Function( {dtConcat}, 
+
+	// Set value ordering
+	Try(dtConcat:Name("Stage") << Set Property("Value Ordering", {"FE", "BE"}));
+	Try(dtConcat:Name("Quad") << Set Property("Value Ordering", {"TL", "TR", "BL", "BR"}));
+
+	// Return dt
+	dtConcat;
+);
