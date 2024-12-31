@@ -1,11 +1,17 @@
 Names Default To Here( 1 );
 
-::FormatEISDataColumnsFn = Function( {dtConcat}, 
+::FormatEISDataColumnsFn = Function( {dtFormat}, 
+
+	// Delete columns
+	dtFormat << Delete Columns( "Match Flag" );
+
+	// Reorder columns
+	dtFormat << Move Selected Columns( {"Bin Name"}, after( "Bin" ) );
 
 	// Set value ordering
-	Try(dtConcat:Name("Stage") << Set Property("Value Ordering", {"FE", "BE"}));
-	Try(dtConcat:Name("Quad") << Set Property("Value Ordering", {"TL", "TR", "BL", "BR"}));
+	Try(dtFormat:Name("Stage") << Set Property("Value Ordering", {"FE", "BE"}));
+	Try(dtFormat:Name("Quad") << Set Property("Value Ordering", {"TL", "TR", "BL", "BR"}));
 
 	// Return dt
-	dtConcat;
+	dtFormat;
 );

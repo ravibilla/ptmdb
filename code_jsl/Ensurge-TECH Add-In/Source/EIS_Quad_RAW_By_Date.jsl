@@ -57,22 +57,37 @@ New Window( "EIS RAW Data by Date",
 				dtBE = ::FormatBEEISDataColumnsFn( dtBE );
 
 				// Concatenate FE & BE data
-				dtConcat = New Table("FE & BE EIS RAW by Date");
+				dtConcat = New Table("Concatenated FE & BE EIS RAW by Date");
 				dtConcat << Concatenate( dtFE, dtBE, "Append to first table");
 				Close( dtFE, NoSave );
 				Close( dtBE, NoSave );
 				
+				// Join with Bin Names
+				dtBin = Open("$ADDIN_HOME(com.ensurge.tech)\Files\EISBinNames.jmp");
+				dtBinJoined = dtConcat  << Join(
+							With( Data Table("EISBinNames")),
+							By Matching Columns( :Bin = :Bin ),
+							Drop multiples( 0, 0 ),
+							Include Nonmatches( 0, 0 ),
+							Merge Same Name Columns( 1 ), 
+							Preserve main table order( 1 ),
+							output table("FE & BE EIS RAW by Date")
+							);
+							
+				Close( dtBin, NoSave );
+				Close( dtConcat, NoSave );
+
 				// Rename columns
-				dtConcat = ::RenameEISDataColumnsFn( dtConcat );
+				dtBinJoined = ::RenameEISDataColumnsFn( dtBinJoined );
 
 				// Format columns
-				dtConcat = ::FormatEISDataColumnsFn( dtConcat );
+				dtBinJoined = ::FormatEISDataColumnsFn( dtBinJoined );
 
 				// Set window size
-				dtConcat << Set Window Size(1400, 850);
+				dtBinJoined << Set Window Size(1400, 850);
 				
 				// Close all child tables and reports without saving
-				dtConcat << onclose( Function( {a}, Close( (a << Child) << GetDataTable, NoSave ); 1; ) );
+				dtBinJoined << onclose( Function( {a}, Close( (a << Child) << GetDataTable, NoSave ); 1; ) );
 				
 			)
 		)
