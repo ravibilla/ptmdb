@@ -2,9 +2,9 @@
 
 Associative Array(
 	List(
-		List( "addinVersion", 1.1 ),
+		List( "addinVersion", 1.2 ),
 		List( "author", "Ravi Billa" ),
-		List( "buildDate", 3818503282 ),
+		List( "buildDate", 3819173847 ),
 		List( "deployedAddinsFilename", "publishedAddins.jsl" ),
 		List( "deployedAddinsLoc", "\\fileserver\COMMON\Software\JMP Add-ins\Meta\" ),
 		List( "email", "ravi.billa@ensurge.com" ),

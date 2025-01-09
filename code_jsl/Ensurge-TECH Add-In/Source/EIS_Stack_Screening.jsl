@@ -2,7 +2,7 @@
 // Use 'PickFile()' to get a list of files to open (Windows only)
 file = "";
 file = Pick File(
-	"Select PL Data files", // Prompt
+	"Select Stack/PCB EIS tracking worksheet", // Prompt
 	//"$DOCUMENTS", // Initial folder
 	"\\fileserver\COMMON\Lab\NEWARE\EIS-Screening\",
 	{"XLSX Files|xlsx", "All Files|*"}, // List of file filters to apply (ignored by OS/X)
@@ -66,10 +66,12 @@ dtStackSummary << New Column( "Low OCV [%]", Numeric, "Continuous", Formula( (:N
 dtStackSummary:Name( "Low OCV [%]" ) << Format( "Fixed Dec", 5, 1 );
 dtStackSummary << New Column( "Open [%]", Numeric, "Continuous", Formula( (:Name("# Open")/:Name("N Rows"))*100 ) );
 dtStackSummary:Name( "Open [%]" ) << Format( "Fixed Dec", 5, 1 );
+dtStackSummary << New Column( "Year", Numeric, "Nominal", Formula( Year(:Date) ) );
 dtStackSummary << New Column( "Workweek", Numeric, "Nominal", Formula( Week Of Year(:Date) ) );
-dtStackSummary << Move Selected Columns( {"Workweek"}, after( "Date" ) );
-dtStackSummary << Move Selected Columns( {"Date"}, after( "Workweek" ) );
+dtStackSummary << Move Selected Columns( {"Year", "Workweek"}, after( "Formfactor" ) );
 
+// Fix column formats
+Try(dtStackSummary:Name("Layers") << Data Type(Numeric) <<  Modeling Type(Nominal) << Format(Best,12));
 
 // Calculate Statistics for Reference Lines in Plots
 // 10u: 8-Week Median
@@ -126,7 +128,12 @@ dtStackSummary << New Script(
 	Show Control Panel( 0 ),
 	Legend Position( "Bottom" ),
 	Variables(
-		X( :Workweek ),
+		X( :Year ),
+		X(
+			:Workweek,
+			Position( 1 ),
+			Order By( :Date, Ascending, Order Statistic( "Mean" ) )
+		),
 		X(
 			:QuadID,
 			Position( 1 ),
@@ -166,10 +173,10 @@ dtStackSummary << New Script(
 	Local Data Filter(
 		Close Outline( 1 ),
 		Add Filter(
-			columns( :FormFactor, :SS Thickness, :Date ),
+			columns( :Date, :FormFactor, :SS Thickness, :Layers),
+			Where( :Date >=  As Date(Today()) - in weeks(8) ),
 			Where( :FormFactor == "Stack" ),
-			Where( :SS Thickness == 10 ),
-			Where( :Date >=  As Date(Today()) - in weeks(8) )
+			Where( :SS Thickness == 10 )
 		)
 	),
 	SendToReport(
@@ -220,7 +227,12 @@ dtStackSummary << New Script(
 	Show Control Panel( 0 ),
 	Legend Position( "Bottom" ),
 	Variables(
-		X( :Workweek ),
+		X( :Year ),
+		X(
+			:Workweek,
+			Position( 1 ),
+			Order By( :Date, Ascending, Order Statistic( "Mean" ) )
+		),
 		X(
 			:QuadID,
 			Position( 1 ),
@@ -260,10 +272,10 @@ dtStackSummary << New Script(
 	Local Data Filter(
 		Close Outline( 1 ),
 		Add Filter(
-			columns( :FormFactor, :SS Thickness, :Date ),
+			columns( :Date, :FormFactor, :SS Thickness, :Layers),
+			Where( :Date >=  As Date(Today()) - in weeks(8) ),
 			Where( :FormFactor == "Stack" ),
-			Where( :SS Thickness == 75 ),
-			Where( :Date >=  As Date(Today()) - in weeks(8) )
+			Where( :SS Thickness == 75 )
 		)
 	),
 	SendToReport(
