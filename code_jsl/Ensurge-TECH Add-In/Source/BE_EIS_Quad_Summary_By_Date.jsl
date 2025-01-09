@@ -1,0 +1,81 @@
+﻿Names Default To Here( 1 );
+
+ns = ::GetAddinNamespaceFn();
+Addin_Name = ns:AddinArray["name"];
+//::LogUsageFn( "BE_EIS_Quad_Summary_By_Date" );
+
+// Include files
+Include( "$ADDIN_HOME(com.ensurge.tech)\Functions\DateBoxFn.jsl" );
+Include( "$ADDIN_HOME(com.ensurge.tech)\Functions\FormatBEEISDataColumnsFn.jsl" );
+Include( "$ADDIN_HOME(com.ensurge.tech)\Functions\RenameEISDataColumnsFn.jsl" );
+Include( "$ADDIN_HOME(com.ensurge.tech)\Functions\FormatEISDataColumnsFn.jsl" );
+
+// Create a modal dialog
+New Window( "BE EIS Summary data by Date",
+	<<Modal,
+	V List Box(
+		Text Box( "Query BE EIS Summary data by Date", <<set font size( 11 ), <<set font style( "bold" ) ),
+		Text Box( "" ),
+		H List Box(
+			Panel Box( "Select Date Range:",
+				V List Box(
+					Spacer Box(),
+					H List Box(
+						Text Box( "From: ", "" ),
+						start_date = ::DateBoxFn( Today() - in weeks(1) ), // Set to 1 week ago
+						Text Box( "  ", "" ),
+						Text Box( "To: ", "" ),
+						end_date = ::DateBoxFn( Today() ),
+						Text Box( "  ", "" )
+					)
+				)
+			)
+		),
+		H List Box(
+			Spacer Box( size( 220, 0 ) ),
+			Button Box( "OK",
+				sDate = Format((start_date << Get), "yyyy-mm-dd");
+				eDate = Format((end_date << Get), "yyyy-mm-dd");
+	
+				// Query Backend EIS Summary data
+				queryString = "EXECUTE spGetBackendEISDataSummaryByDate '" || Char( sDate ) || "', '" || Char( eDate ) || "';";
+				dbCon = Create Database Connection( ::GetDSNCredentialsFn("beeis") );
+				dtBE = Execute SQL( dbCon, queryString, "Temp BE EIS Summary by Date" );
+				dtBE << Show Window(0);
+				Close Database Connection( dbCon );
+				
+				// Fix column formats
+				dtBE = ::FormatBEEISDataColumnsFn( dtBE );
+				
+				// Join with Bin Names
+				dtBin = Open("$ADDIN_HOME(com.ensurge.tech)\Files\EISBinNames.jmp");
+				dtBinJoined = dtBE  << Join(
+							With( Data Table("EISBinNames")),
+							By Matching Columns( :Bin = :Bin ),
+							Drop multiples( 0, 0 ),
+							Include Nonmatches( 0, 0 ),
+							Merge Same Name Columns( 1 ), 
+							Preserve main table order( 1 ),
+							output table("BE EIS Summary by Date")
+							);
+							
+				Close( dtBin, NoSave );
+				Close( dtBE, NoSave );
+
+				// Rename columns
+				dtBinJoined = ::RenameEISDataColumnsFn( dtBinJoined );
+
+				// Format columns
+				dtBinJoined = ::FormatEISDataColumnsFn( dtBinJoined );
+
+				// Set window size
+				dtBinJoined << Set Window Size(1400, 850);
+				
+				// Close all child tables and reports without saving
+				dtBinJoined << onclose( Function( {a}, Close( (a << Child) << GetDataTable, NoSave ); 1; ) );
+				
+			)
+		)
+	)
+);
+
