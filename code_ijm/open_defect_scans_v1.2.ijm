@@ -1,6 +1,6 @@
 #@ File (label="Select search directory", style="directory", value="C:\\Users\\ravi.billa\\Ensurge\\Operations - Manufacturing\\Defect Inspection\\", persist=False) dir
 #@ String (label="Enter search pattern", value="D270", persist=False) lotID
-#@ String (label="Defect Code", choices={"", "B010", "B032", "B040", "B050", "B060", "B062","B072"}, style="listBox") defectCode
+#@ String (label="Defect Code", choices={"", "A010", "A020", "A030", "A040", "B010", "B032", "B040", "B050", "B052", "B060", "B062", "B072"}, style="listBox") defectCode
 #@ Date (label="Start Date", value="Wed Jan 01 00:00:00 PST 2025", style="date") startDate
 #@ Date (label="End Date", value="Sat Mar 01 00:00:00 PST 2025", style="date") endDate
 
