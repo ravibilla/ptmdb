@@ -180,31 +180,41 @@ if (matchingFiles.length > 0) {
         
         // Clear progress bar
         showProgress(1);
-        showStatus("Converting images to stack...");
         
-        // Convert all open images to a stack using "Copy to Center" method and use titles as labels
-        run("Images to Stack", "method=[Copy (center)] name=" + pattern + " title=[] use");
-        
-        // Calculate columns and rows for 16:9 aspect ratio
-        aspectRatio = 16/9;
-        totalArea = matchingFiles.length;
-        columns = Math.ceil(Math.sqrt(totalArea * aspectRatio));
-        rows = Math.ceil(totalArea / columns);
-        
-        // Create montage with specified parameters
-        run("Make Montage...", "columns=" + columns + 
-            " rows=" + rows + 
-            " scale=0.5" +
-            " font=200" +
-            " label" +
-            " use");
-        
-        // Maximize the montage window
-        run("Select None");
-        run("Show All");
-        
-        showStatus("Completed creating montage of " + matchingFiles.length + " images");
-        print("\nCreated montage from " + matchingFiles.length + " images with pattern: " + pattern);
+        // Only create stack and montage if there's more than one image
+        if (matchingFiles.length > 1) {
+            showStatus("Converting images to stack...");
+            
+            // Convert all open images to a stack using "Copy to Center" method and use titles as labels
+            run("Images to Stack", "method=[Copy (center)] name=" + pattern + " title=[] use");
+            
+            // Calculate columns and rows for 16:9 aspect ratio
+            aspectRatio = 16/9;
+            totalArea = matchingFiles.length;
+            columns = Math.ceil(Math.sqrt(totalArea * aspectRatio));
+            rows = Math.ceil(totalArea / columns);
+            
+            // Create montage with specified parameters
+            run("Make Montage...", "columns=" + columns + 
+                " rows=" + rows + 
+                " scale=0.5" +
+                " font=200" +
+                " label" +
+                " use");
+            
+            // Maximize the montage window
+            run("Select None");
+            run("Show All");
+            
+            showStatus("Completed creating montage of " + matchingFiles.length + " images");
+            print("\nCreated montage from " + matchingFiles.length + " images with pattern: " + pattern);
+        } else {
+            // For single image, just maximize it
+            run("Select None");
+            run("Show All");
+            showStatus("Opened single image: " + matchingFileNames[0]);
+            print("\nOpened single image: " + matchingFileNames[0]);
+        }
     } else {
         print("\nUser chose not to open the files.");
     }
