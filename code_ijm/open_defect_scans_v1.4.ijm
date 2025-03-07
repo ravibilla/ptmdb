@@ -1,5 +1,5 @@
 #@ File (label="Select search directory", style="directory", value="C:\\Users\\ravi.billa\\Ensurge\\Operations - Manufacturing\\Defect Inspection\\", persist=False) dir
-#@ String (label="Enter lot IDs (comma or space separated)", value="D270", persist=False) lotIDs
+#@ String (label="Enter lot IDs (comma or space separated)", value="D270") lotIDs
 #@ String (label="Defect Code", choices={"", "A010", "A020", "A030", "A040", "B010", "B032", "B040", "B050", "B052", "B060", "B062", "B072"}, style="listBox") defectCode
 #@ Boolean (label="Enable Date Filter", value=true) useDateFilter
 #@ Date (label="Start Date", value="Wed Jan 01 00:00:00 PST 2025", style="date") startDate
